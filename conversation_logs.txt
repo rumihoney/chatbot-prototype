@@ -1,0 +1,10 @@
+USER: rumi
+BOT: Nice to meet you rumi!
+USER: rumi
+BOT: Nice to meet you rumi!
+USER: purple
+BOT: Purple is my favourite colour too!
+USER: 10
+BOT: Meh, that's an okay number I guess.
+USER: 2
+BOT: Congratulations, you have won a cookie
