@@ -1,4 +1,5 @@
 # "Talk to Me" interactive little bot
+# this is the initial prototype 
 
 import random                                                         # pick random response = less repetitive
 
