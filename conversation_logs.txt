@@ -1,10 +1,14 @@
-USER: rumi
-BOT: Nice to meet you rumi!
-USER: rumi
-BOT: Nice to meet you rumi!
-USER: purple
-BOT: Purple is my favourite colour too!
-USER: 10
+USER: Rumi
+BOT: Nice to meet you Rumi!
+USER: 28
+BOT: Congratulations, your frontal lobe is fully developed!
+USER: blue
+BOT: blue is cute
+USER: 1
 BOT: Meh, that's an okay number I guess.
-USER: 2
-BOT: Congratulations, you have won a cookie
+USER: whats up
+BOT: I'm not sure how to respond to that.
+USER: ok
+BOT: I'm not sure how to respond to that.
+USER: exit
+BOT: See you later!

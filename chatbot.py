@@ -2,6 +2,8 @@
 # this is the initial prototype 
 
 import random                                                         # pick random response = less repetitive
+from experiments import existential_scenario                          # existential scenario dialogue  
+from experiments import therapist_chat                                # therapist chat dialogue
 
 # -----------------------------------------------------
 # Memory storage
@@ -26,15 +28,15 @@ def get_int(prompt):
 # -----------------------------------------------------
 intents = {
     "greet": {
-        "trigger": ["hello", "hi", "hey"], 
-        "responses": ["Hello! How can I assist you today?", "Hi there! How can I help?"]
+        "trigger": ["hello", "hi", "hey", "what's up"], 
+        "responses": ["Hello!", "Hi there!"]
         },
     "goodbye": {
         "trigger": ["bye", "see you", "exit"], 
-        "responses": ["Goodbye! Have a great day!", "See you later!"]
+        "responses": ["Goodbye!", "See you later!"]
         },
     "thanks": {
-        "trigger": ["thanks", "thank you"], 
+        "trigger": ["thanks", "thank you", "thx"], 
         "responses": ["You're welcome!", "Glad to help!"]
         }
 }
@@ -139,35 +141,14 @@ print(response)
 history.append(("user", str(number)))
 history.append(("bot", response))
 
-
 # -----------------------------------------------------
-# Existential scenario
+# Dialogue experiments
 # -----------------------------------------------------
-choice = get_int("\nOH NOOOOO, You have just died! Type a number between 1 and 3: \n")
 
-if choice == 1:
-    response = "Nothing has happened, you are still dead.\nGame Over"
-    print(response) 
-elif choice == 2:
-    response = "JESUS! You have been resurrected"
-    print(response)   
-elif choice > 3:
-    answer = input("You have just entered the vortex. Would you like to proceed? (yes/no): ").strip().lower()
-    
-    if answer == "yes":
-        response = "Congratulations, you have won a cookie"
-    elif answer == "no":
-        response = "You have fallen into the death abyss.\nGame Over"
-    else:
-        response = "The universe does not understand your answer."
-    print(response)
-else:
-    response = "What the hell"
-    print(response)
+# uncomment the following to experiment with spicier dialogues:
 
-history.append(("user", str(choice)))
-history.append(("bot", response))
-
+# existential_scenario(get_int, history)
+# therapist_chat(history)
 
 # -----------------------------------------------------
 # Save conversation log
@@ -177,20 +158,34 @@ with open("conversation_logs.txt", "w") as file:
     for speaker, text in history:
         file.write(f"{speaker.upper()}: {text}\n")
         
-# need to review this section***
-
 
 # -----------------------------------------------------
 # Intent chat loop
 # -----------------------------------------------------
-print("\n--- Free chat mode (type 'exit' to stop) ---")
 
-while True:
-    user_input = input("> ")
+# function to save conversation log
+def save_conversation(filename="conversation_logs.txt"):
+    with open(filename, "w") as file:
+        for speaker, text in history:
+            file.write(f"{speaker.upper()}: {text}\n")
 
-    reply = chatbot_response(user_input)  # get a reply from your intent system
-    print(reply)                          # show it
+# function to handle free chat mode
+def free_chat_mode():
+    print("\n--- Free chat mode (type 'exit' to stop) ---")
 
-    # stop the loop if user intent is goodbye
-    if find_intent(user_input) == "goodbye":
-        break
+# loop to handle free chat mode
+    while True:
+        user_input = input("> ").strip()
+        reply = chatbot_response(user_input)
+
+        history.append(("user", user_input))
+        history.append(("bot", reply))
+
+        print(reply)
+
+        if find_intent(user_input) == "goodbye":
+            break
+        
+free_chat_mode()
+save_conversation()
+print("Conversation saved to conversation_logs.txt")
