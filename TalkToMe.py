@@ -13,7 +13,7 @@ conversation logs.
 '''
 
 import sys
-import random                                                         # pick random response = less repetitive
+import random                                                         # randomly selects a response to reduce repetition.
 import nltk
 from nltk.tokenize import word_tokenize
 from nltk.stem import WordNetLemmatizer
@@ -45,15 +45,15 @@ lemmatizer = WordNetLemmatizer()
 # Error minimization function
 # ======================================================
 def get_int(prompt):
-    while True:                                                       # Infinite loop until valid input is given
-        text = input(prompt).strip().lower()                          # Get user input and remove extra spaces
+    while True:                                                       # infinite loop until valid input is given
+        text = input(prompt).strip().lower()                          # get user input and remove extra spaces
         
-        if text in ["exit", "quit", "bye"]:                           # Check for exit commands
-            print("Goodbye! Ending conversation.")                    # Exit the program if user wants to end the conversation whenever
+        if text in ["exit", "quit", "bye"]:                           # check for exit commands
+            print("Goodbye! Ending conversation.")                    # exit the program if user wants to end the conversation whenever
             sys.exit()
             
-        if text.isdigit():                                            # Check if the input contains only digits
-            return int(text)                                          # Convert to integer and return       
+        if text.isdigit():                                            # check if the input contains only digits
+            return int(text)                                          # convert to integer and return       
         print("Please type a number.")                                # if input is not a number, show error message
 
 
@@ -133,7 +133,7 @@ name = ""
 while not name.strip():                                               # using strip method to ensure name is not empty or spaces
     name = input("What is your name? ")           
     
-    if name.lower() in ["exit", "quit", "bye"]:                       # Check for exit commands
+    if name.lower() in ["exit", "quit", "bye"]:                       # check for exit commands
         print("Goodbye! Ending conversation.")                        # Exit the program if user wants to end the conversation whenever
         sys.exit()
         
@@ -150,8 +150,8 @@ history.append(("bot", f"Nice to meet you {name}!"))
 # ======================================================
 # Age interaction
 # ======================================================
-age = get_int("How old are you? ")                                    # continues asking until user inputs valid int
-                                                                      # function keeps asking the question until user gives a valid number                                                         
+age = get_int("How old are you? ")                                    # continues asking until the user enters a valid integer.
+                                                                                                                              
 if age > 25:
     response = "Congratulations, your frontal lobe is fully developed!"
 elif age < 18:
@@ -222,23 +222,12 @@ history.append(("bot", response))
 
 
 # ======================================================
-# Save conversation log
-# ======================================================
-with open("conversation_logs.txt", "w") as file:
-    # Write each turn to the file
-    for speaker, text in history:
-        file.write(f"{speaker.upper()}: {text}\n")
-        
-
-# ======================================================
 # Free chat mode
 # ======================================================
 
-# function to handle free chat mode
 def free_chat_mode():
     print("\n--- Free chat mode (type 'exit' to stop) ---")
 
-# loop to handle free chat mode
     while True:
         user_input = input("> ").strip()
         reply = chatbot_response(user_input)
@@ -251,18 +240,19 @@ def free_chat_mode():
         if find_intent(user_input) == "goodbye":
             break
         
-free_chat_mode()
 
-           
 # ======================================================
-# Intent chat loop
+# Program termination
 # ======================================================
 
-# function to save conversation log
 def save_conversation(filename="conversation_logs.txt"):
+# Save the conversation history to a text file.
     with open(filename, "w") as file:
         for speaker, text in history:
             file.write(f"{speaker.upper()}: {text}\n")
 
+
+free_chat_mode()
 save_conversation()
-print("Conversation saved to conversation_logs.txt")
+
+print("\nConversation saved to conversation_logs.txt.")
