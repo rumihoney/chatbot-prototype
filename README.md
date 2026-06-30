@@ -41,19 +41,20 @@ A small interactive rule-based chatbot built in Python for LING 498 – Computat
 
 ## Project Structure 
 
-TalkToMe.py
-experiments.py
-conversation_logs.txt
-README.md
+- TalkToMe.py
+- experiments.py
+- conversation_logs.txt
+- README.md
 
 ## Running the Project
 
 Install NLTK
 
 If running for the first time, download the following resources:
-nltk.download("punkt")
-nltk.download("wordnet")
-nltk.download("omw-1.4")
+
+- nltk.download("punkt")
+- nltk.download("wordnet")
+- nltk.download("omw-1.4")
 
 ## Project Status
 
