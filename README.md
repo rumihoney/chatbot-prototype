@@ -35,8 +35,7 @@ This is an introductory prototype. It is rule-based and does not use machine lea
 ## Future Improvements
 
 - Add more intents and responses
-- Improve the conversation log system
 - Add better input validation
 - Use NLP libraries such as NLTK or spaCy
-- Add sentiment detection
+- Add sentiment analysis
 - Build a cleaner command-line interface
