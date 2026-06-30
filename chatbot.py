@@ -1,7 +1,28 @@
-# "Talk to Me" interactive little bot
-# this is the initial prototype 
+'''
+Talk to Me
 
+Rule-Based Chatbot Prototype for LING 498 – Computational Methods in Linguistics
+
+Author: Roumaissaa Lassal 
+
+Description:
+The chatbot performs lexical preprocessing using NLTK,
+detects conversational intents through keyword matching,
+stores simple conversational memory, and records
+conversation logs.
+'''
+
+import sys
 import random                                                         # pick random response = less repetitive
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk.stem import WordNetLemmatizer
+
+# Download these if needed
+# nltk.download("punkt")
+# nltk.download("wordnet")
+# nltk.download("omw-1.4")
+
 from experiments import existential_scenario                          # existential scenario dialogue  
 from experiments import therapist_chat                                # therapist chat dialogue
 
@@ -14,18 +35,30 @@ history = []                                                          # list tha
 
 
 # ======================================================
+# Lemmatizer: reducing words to base form
+# ======================================================
+
+lemmatizer = WordNetLemmatizer()
+
+
+# ======================================================
 # Error minimization function
 # ======================================================
 def get_int(prompt):
     while True:                                                       # Infinite loop until valid input is given
-        text = input(prompt).strip()                                  # Get user input and remove extra spaces
+        text = input(prompt).strip().lower()                          # Get user input and remove extra spaces
+        
+        if text in ["exit", "quit", "bye"]:                           # Check for exit commands
+            print("Goodbye! Ending conversation.")                    # Exit the program if user wants to end the conversation whenever
+            sys.exit()
+            
         if text.isdigit():                                            # Check if the input contains only digits
             return int(text)                                          # Convert to integer and return       
         print("Please type a number.")                                # if input is not a number, show error message
 
 
 # ======================================================
-# Intent detector
+# Intent detector and response generator
 # ======================================================
 intents = {
     "greet": {
@@ -42,15 +75,29 @@ intents = {
         }
 }
 
+# Preprocess user input through tokenization and lemmatization
+def preprocess_text(text):
+    text = text.lower().strip()
+    tokens = word_tokenize(text)
+    lemmas = [lemmatizer.lemmatize(token) for token in tokens if token.isalpha()]
+    return lemmas
+# "Thanks!" becomes "thank"
+# "dogs" becomes "dog"
+
 # Function to find intent
 def find_intent(user_input):
-    for intent_name, data in intents.items():                         # Loop through each intent -> "greet", "goodbye", "thanks"
-        for phrase in data["trigger"]:                                # Loop through each trigger phrase 
-            if phrase in user_input.lower():                          # make phrase case-insensitive
-                return intent_name                                    # return intent label e.g., "greet"
-    return None                                                       # if nothing matches -> return None
+    user_lemmas = preprocess_text(user_input)
+    
+    for intent_name, data in intents.items():
+        for phrase in data["trigger"]:
+            trigger_lemmas = preprocess_text(phrase)
+            
+            if all(word in user_lemmas for word in trigger_lemmas):
+                return intent_name
+            
+    return None
 
-# Function to convert user input -> bot reply
+# Generate a chatbot response from the detected intent
 def chatbot_response(user_input):
     intent_name = find_intent(user_input)                             # detect intent
     if intent_name is not None:
@@ -59,14 +106,37 @@ def chatbot_response(user_input):
 
 
 # ======================================================
-# Greeting phase
+# Greeting phase & intent detection
 # ======================================================
-user_input = input("Say something to start (hi/thanks/bye): ")
-print(chatbot_response(user_input))
+user_input = input('Hello, I am Rumi\'s chatbot! "Talk to Me",  Say something to start (hi/thanks/bye): ')
 
+intent = find_intent(user_input)
+
+if intent == "goodbye":
+    print(random.choice(intents["goodbye"]["responses"]))
+    sys.exit()
+
+elif intent == "thanks":
+    print(random.choice(intents["thanks"]["responses"]))
+
+elif intent == "greet":
+    print("Hello there! Let's get to know each other a bit more.")
+
+else:
+    print("I'm not sure how to respond to that.")
+    
+
+# ======================================================
+# Main conversation loop
+# ======================================================
 name = ""
 while not name.strip():                                               # using strip method to ensure name is not empty or spaces
     name = input("What is your name? ")           
+    
+    if name.lower() in ["exit", "quit", "bye"]:                       # Check for exit commands
+        print("Goodbye! Ending conversation.")                        # Exit the program if user wants to end the conversation whenever
+        sys.exit()
+        
     if not name.strip():                                              # if entry still empty it will prompt the user to enter it again
         print("Please enter your name.")
         
@@ -80,11 +150,8 @@ history.append(("bot", f"Nice to meet you {name}!"))
 # ======================================================
 # Age interaction
 # ======================================================
-age = get_int("How old are you? ")                                    # get_int() function from CS50 library to safely return user's input as an int 
-                                                                      # function keeps asking the question until user gives a valid number
-                                                         
-memory["age"] = age                                                   # storing age in memory
-
+age = get_int("How old are you? ")                                    # continues asking until user inputs valid int
+                                                                      # function keeps asking the question until user gives a valid number                                                         
 if age > 25:
     response = "Congratulations, your frontal lobe is fully developed!"
 elif age < 18:
@@ -147,7 +214,8 @@ history.append(("bot", response))
 # Dialogue experiments
 # ======================================================
 
-# uncomment the following to experiment with spicier dialogues:
+# Optional dialogue experiments developed during testing.
+# These can be enabled to explore alternative conversation flows.
 
 # existential_scenario(get_int, history)
 # therapist_chat(history)
@@ -161,16 +229,10 @@ with open("conversation_logs.txt", "w") as file:
     for speaker, text in history:
         file.write(f"{speaker.upper()}: {text}\n")
         
-           
-# ======================================================
-# Intent chat loop
-# ======================================================
 
-# function to save conversation log
-def save_conversation(filename="conversation_logs.txt"):
-    with open(filename, "w") as file:
-        for speaker, text in history:
-            file.write(f"{speaker.upper()}: {text}\n")
+# ======================================================
+# Free chat mode
+# ======================================================
 
 # function to handle free chat mode
 def free_chat_mode():
@@ -190,5 +252,17 @@ def free_chat_mode():
             break
         
 free_chat_mode()
+
+           
+# ======================================================
+# Intent chat loop
+# ======================================================
+
+# function to save conversation log
+def save_conversation(filename="conversation_logs.txt"):
+    with open(filename, "w") as file:
+        for speaker, text in history:
+            file.write(f"{speaker.upper()}: {text}\n")
+
 save_conversation()
 print("Conversation saved to conversation_logs.txt")
