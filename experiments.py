@@ -1,9 +1,9 @@
 # Experimental dialogues: Testing branching dialogue.
 
 
-# -----------------------------------------------------
+# ======================================================
 # Existential scenario
-# -----------------------------------------------------
+# ======================================================
 def existential_scenario(get_int, history):
     choice = get_int(
         "\nOH NOOOOO, You have just died! Type a number between 1 and 3:\n"
@@ -36,9 +36,9 @@ def existential_scenario(get_int, history):
     history.append(("bot", response))
     
     
-# -----------------------------------------------------
+# ======================================================
 # Therapist
-# -----------------------------------------------------
+# ======================================================
 
 # counseling function
 def therapist_chat(history):

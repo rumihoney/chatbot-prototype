@@ -5,16 +5,17 @@ import random                                                         # pick ran
 from experiments import existential_scenario                          # existential scenario dialogue  
 from experiments import therapist_chat                                # therapist chat dialogue
 
-# -----------------------------------------------------
+
+# ======================================================
 # Memory storage
-# -----------------------------------------------------
+# ======================================================
 memory = {}                                                           # dictionary used to store data learned from the convo
 history = []                                                          # list that keeps track of the full conversation log
 
 
-# -----------------------------------------------------
+# ======================================================
 # Error minimization function
-# -----------------------------------------------------
+# ======================================================
 def get_int(prompt):
     while True:                                                       # Infinite loop until valid input is given
         text = input(prompt).strip()                                  # Get user input and remove extra spaces
@@ -23,9 +24,9 @@ def get_int(prompt):
         print("Please type a number.")                                # if input is not a number, show error message
 
 
-# -----------------------------------------------------
+# ======================================================
 # Intent detector
-# -----------------------------------------------------
+# ======================================================
 intents = {
     "greet": {
         "trigger": ["hello", "hi", "hey", "what's up"], 
@@ -57,9 +58,9 @@ def chatbot_response(user_input):
     return "I'm not sure how to respond to that."                     # fallback when no intent matches
 
 
-# -----------------------------------------------------
+# ======================================================
 # Greeting phase
-# -----------------------------------------------------
+# ======================================================
 user_input = input("Say something to start (hi/thanks/bye): ")
 print(chatbot_response(user_input))
 
@@ -76,9 +77,9 @@ history.append(("user", name))                                        # log inte
 history.append(("bot", f"Nice to meet you {name}!"))
 
 
-# -----------------------------------------------------
+# ======================================================
 # Age interaction
-# -----------------------------------------------------
+# ======================================================
 age = get_int("How old are you? ")                                    # get_int() function from CS50 library to safely return user's input as an int 
                                                                       # function keeps asking the question until user gives a valid number
                                                          
@@ -98,9 +99,9 @@ history.append(("bot", response))
 memory["age"] = age                                                   # storing age in memory
 
 
-# -----------------------------------------------------
+# ======================================================
 # Colour interaction
-# -----------------------------------------------------
+# ======================================================
 colour = input("What is your favourite colour? ").strip().lower()
 
 # Dictionary mapping colours to responses
@@ -123,9 +124,9 @@ history.append(("user", colour))
 history.append(("bot", response))
 
 
-# -----------------------------------------------------
+# ======================================================
 # Number interaction
-# -----------------------------------------------------
+# ======================================================
 number = get_int("Give me a number between 1 and 10: ")
 
 if number == 7:
@@ -141,27 +142,29 @@ print(response)
 history.append(("user", str(number)))
 history.append(("bot", response))
 
-# -----------------------------------------------------
+
+# ======================================================
 # Dialogue experiments
-# -----------------------------------------------------
+# ======================================================
 
 # uncomment the following to experiment with spicier dialogues:
 
 # existential_scenario(get_int, history)
 # therapist_chat(history)
 
-# -----------------------------------------------------
+
+# ======================================================
 # Save conversation log
-# -----------------------------------------------------
+# ======================================================
 with open("conversation_logs.txt", "w") as file:
     # Write each turn to the file
     for speaker, text in history:
         file.write(f"{speaker.upper()}: {text}\n")
         
-
-# -----------------------------------------------------
+           
+# ======================================================
 # Intent chat loop
-# -----------------------------------------------------
+# ======================================================
 
 # function to save conversation log
 def save_conversation(filename="conversation_logs.txt"):
